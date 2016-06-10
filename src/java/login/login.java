@@ -28,6 +28,9 @@ import org.json.JSONObject;
 @WebServlet(name = "login", urlPatterns = {"/login"})
 public class login extends HttpServlet {
 
+    String Username = null;
+    String Password = null;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -45,26 +48,22 @@ public class login extends HttpServlet {
         // Initialize Strings
         String Register = null;
         String UserId = null;
+
         // Store all data from url to string
         try (PrintWriter out = response.getWriter()) {
             //GET THE USER_ID FROM URL
-            UserId = request.getParameter("userid");
             Register = request.getParameter("register");
-            out.println("<h1>Userid " + UserId + "</h1>");
-            out.println("<h1>Register  " + Register + "</h1>");
         }
         // Check if the user must register
-        if (Register == "True") {
-            String Username = null;
-            String Password = null;
+        if (Register == "true") {
+
             int Result;
             Result = dblogin.Register(Username, Password);
             //send via JSON Result
         }
         // Check if the user must login
         if (Register == null) {
-            String Username = null;
-            String Password = null;
+
             int Result;
             //als er iets anders dan 0 uitkomt login geslaagt
             Result = dblogin.Login(Username, Password);
@@ -110,6 +109,8 @@ public class login extends HttpServlet {
 
         try {
             JSONObject jsonObject = HTTP.toJSONObject(jb.toString());
+            Username = jsonObject.getString("user_name");
+            Password = jsonObject.getString("password");
         } catch (JSONException ex) {
             Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
         }
